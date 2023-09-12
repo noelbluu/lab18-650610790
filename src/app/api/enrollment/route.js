@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
-  const rawAuthHeader = headers().get("authorization");
+  const rawAuthHeader = request.headers.get("authorization");
   const token = rawAuthHeader.split(" ")[1];
 
   let studentId = null;
