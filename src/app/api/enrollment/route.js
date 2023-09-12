@@ -32,7 +32,7 @@ export const GET = async (request) => {
   if (role === "ADMIN") {
     return NextResponse.json({
       ok: true,
-      enrollments: DB.enrollments, //replace null with enrollment data!
+      enrollments: DB.enrollments,
     });
   }
 
@@ -53,7 +53,6 @@ export const POST = async (request) => {
   const rawAuthHeader = headers().get("authorization");
   const token = rawAuthHeader.split(" ")[1];
   let studentId = null;
-  
   //preparing "role" variable for reading role information from token
   let role = null;
 
@@ -133,9 +132,10 @@ export const POST = async (request) => {
 
 export const DELETE = async (request) => {
   //check token
-  //verify token and get "studentId" and "role" information here
   const rawAuthHeader = headers().get("authorization");
   const token = rawAuthHeader.split(" ")[1];
+  
+  //verify token and get "studentId" and "role" information here
   let studentId = null;
   let role = null;
 
@@ -153,6 +153,7 @@ export const DELETE = async (request) => {
     );
   }
 
+  //if role is "ADMIN", send the following response
   if (role === "ADMIN") {
     return NextResponse.json(
       {
