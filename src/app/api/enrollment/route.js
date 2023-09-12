@@ -17,7 +17,7 @@ export const GET = async (request) => {
     studentId = payload.studentId;
 
     //read role information from "payload" here (just one line code!)
-    role = payload.role
+    role = payload.role;
   } catch {
     return NextResponse.json(
       {
@@ -32,8 +32,8 @@ export const GET = async (request) => {
   if (role === "ADMIN") {
     return NextResponse.json({
       ok: true,
-      enrollments: DB.enrollments //replace null with enrollment data!
-    })
+      enrollments: DB.enrollments, //replace null with enrollment data!
+    });
   }
 
   const courseNoList = [];
@@ -53,6 +53,7 @@ export const POST = async (request) => {
   const rawAuthHeader = headers().get("authorization");
   const token = rawAuthHeader.split(" ")[1];
   let studentId = null;
+  
   //preparing "role" variable for reading role information from token
   let role = null;
 
@@ -60,7 +61,7 @@ export const POST = async (request) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     studentId = payload.studentId;
     //read role information from "payload" here (just one line code!)
-    role = payload.role
+    role = payload.role;
   } catch {
     return NextResponse.json(
       {
@@ -133,13 +134,25 @@ export const POST = async (request) => {
 export const DELETE = async (request) => {
   //check token
   //verify token and get "studentId" and "role" information here
-  const rawAuthHeader = headers().get("authorization")
-  const token = rawAuthHeader.split(" ")[1]
-
+  const rawAuthHeader = headers().get("authorization");
+  const token = rawAuthHeader.split(" ")[1];
   let studentId = null;
   let role = null;
 
-  //if role is "ADMIN", send the following response
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    studentId = payload.studentId;
+    role = payload.role;
+  } catch {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid token",
+      },
+      { status: 401 }
+    );
+  }
+
   if (role === "ADMIN") {
     return NextResponse.json(
       {
